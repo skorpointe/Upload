@@ -1,0 +1,140 @@
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Public</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="https://firebasestorage.googleapis.com/v0/b/skor-pointe.appspot.com/o/config%2Fconfig.js?alt=media&token=2c34e507-a72b-40b2-8e96-d8b3a865b9cb"></script>
+    <style>
+    body {
+      width: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f0f0;
+}
+
+    .hidden{
+      display: none;
+    }
+    
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+input[type="file"] {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 2px dashed #3498db;
+  border-radius: 5px;
+  width: calc(100% - 24px);
+  cursor: pointer;
+  background-color: #f9f9f9;
+}
+
+input[type="file"]:hover {
+  background-color: #f0f0f0;
+}
+
+button {
+  padding: 12px 24px;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+.notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2ecc71;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.notification.show {
+  opacity: 1;
+}
+  </style>
+
+</head>
+<body>
+
+      </header>
+  <div class="container">
+    <h1>Upload Public</h1>
+  <!--<input type="file" id="fileUpload" accept="images/*">-->
+  <input type="file" id="fileUpload" accept="*">
+  <button onclick="uploadFile()">Upload Public</button>
+    <br/><p></p>
+  <div id="progress"></div>
+    <div id="notification"></div>
+    <br/>
+  <div id="downloadURL"></div>
+    <div>
+  <script>
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+const storage = firebase.storage();
+const storageRef = storage.ref();
+
+function uploadFile() {
+  const file = document.getElementById("fileUpload").files[0];
+  /*const fileName = file.name;
+  const fileRef = storageRef.child(fileName);*/
+  const fileName = 'Upload/' + file.name;
+const fileRef = storageRef.child(fileName);
+  const uploadTask = fileRef.put(file);
+
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      // Update progress bar
+      const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      document.getElementById("progress").innerText = `Upload progress: ${progress}%`;
+    },
+    (error) => {
+      // Handle errors
+      console.error("Upload error:", error);
+    },
+    () => {
+      // Upload success
+      uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+        // Display download URL
+        document.getElementById("downloadURL").innerHTML = `<a href="${downloadURL}" target="_blank">Show File</a>`;
+        // Show upload success notification
+        document.getElementById("notification").innerText = "Upload successful";
+        setTimeout(() => {
+          document.getElementById("notification").innerText = "";
+        }, 3000); // Hides the notification after 3 seconds (3000 milliseconds)
+      });
+    }
+);
+}
+  </script>
+</body>
