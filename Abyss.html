@@ -7,77 +7,76 @@
 </head>
 <body>
     <h1>Upload Abyss.to</h1>
-    <form action="upload.php" method="post" enctype="multipart/form-data">
+    <form id="uploadForm" action="upload.php" method="post" enctype="multipart/form-data">
         <input type="file" name="file">
         <input type="submit" value="Upload">
     </form>
     <div class="upload-notification" id="uploadNotification">
-    <div class="upload-icon">
-        <i class="fas fa-check-circle"></i>
+        <div class="upload-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="upload-content">
+            <p class="status">Complete</p>
+            <p class="slug">Slug: nvOI3dYwD</p>
+        </div>
     </div>
-    <div class="upload-content">
-        <p class="status">Complete</p>
-        <p class="slug">Slug: nvOI3dYwD</p>
-    </div>
-</div>
 
-<style>
-  .upload-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #4caf50;
-    color: #fff;
-    padding: 15px;
-    border-radius: 5px;
-    display: none;
-    z-index: 9999;
-}
+    <style>
+        .upload-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            z-index: 9999;
+        }
 
-.upload-notification .upload-icon {
-    float: left;
-    margin-right: 10px;
-}
+        .upload-notification .upload-icon {
+            float: left;
+            margin-right: 10px;
+        }
 
-.upload-notification .upload-content {
-    overflow: hidden;
-}
+        .upload-notification .upload-content {
+            overflow: hidden;
+        }
 
-.upload-notification .status {
-    margin: 0;
-    font-weight: bold;
-}
+        .upload-notification .status {
+            margin: 0;
+            font-weight: bold;
+        }
 
-.upload-notification .slug {
-    margin: 0;
-    font-style: italic;
-}
-</style>
+        .upload-notification .slug {
+            margin: 0;
+            font-style: italic;
+        }
+    </style>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#uploadForm").submit(function(e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajax({
-                url: "http://up.hydrax.net/cbec685728cb4bc16b0ed40a7e459c3d",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    var data = JSON.parse(response);
-                    if (data.status === true) {
-                        $("#uploadNotification").fadeIn().delay(3000).fadeOut();
-                        $(".status").text(data.msg);
-                        $(".slug").text("Slug: " + data.slug);
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#uploadForm").submit(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                $.ajax({
+                    url: "http://up.hydrax.net/cbec685728cb4bc16b0ed40a7e459c3d",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        if (data.status === true) {
+                            $("#uploadNotification").fadeIn().delay(3000).fadeOut();
+                            $(".status").text(data.msg);
+                            $(".slug").text("Slug: " + data.slug);
+                        }
                     }
-                }
+                });
             });
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
